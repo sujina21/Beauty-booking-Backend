@@ -16,7 +16,7 @@ exports.register_new_user = async (req, res) => {
             const password = req.body.password;
             const salt = await bcrypt.genSalt(10);
             const hash= await bcrypt.hash(password, salt);
-            const avatarUrl=`https"//ui-avatars.com/api/?background=random&name=${fullname}`;
+            const avatarUrl=`https://ui-avatars.com/api/?background=random&name=${fullname}`;
             const newUser = new User({
                 fullname: fullname,
                 email: email,
@@ -37,3 +37,27 @@ exports.register_new_user = async (req, res) => {
 
 
 };
+
+exports.login_user = async (req, res) => { 
+    try{
+        const user = await User.findOne({email: req.body.email});
+        if(user){
+            const validPass = await bcrypt.compare(req.body.password, user.password);
+            if(validPass){
+                const accessToken = jwt.sign({_id: user._id}, process.env.TOKEN_KEY);
+                res.json({message:"Login Successful", data:user, success:true, accessToken: accessToken});
+            }
+            else{
+                res.json(failure("Invalid Email or Password"));
+            }
+        }
+        else{
+            res.json(failure("Invalid Email or Password"));
+        }
+    }   
+    catch(err){
+        console.log(err);
+        res.json(failure("Something went wrong"));
+    }
+    res.end();
+}   
