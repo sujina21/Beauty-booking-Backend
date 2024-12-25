@@ -3,7 +3,7 @@ const morgan = require('morgan');
 const fileUpload = require('express-fileupload');
 
 // Routes Imports
-// const userRoutes = require('./routes/userRoutes');
+const userRoutes = require('./routes/userRoute');
 
 const app = express();
 
@@ -18,6 +18,6 @@ app.get('/', (req, res) => {
 
 
 // Routes
-// app.use('/users', userRoutes);
+app.use('/users', userRoutes);
 
 module.exports = app;
