@@ -73,3 +73,20 @@ exports.update_makeup_service = async (req, res) => {
     }
     res.end();
 }
+
+exports.delete_makeup_service_by_id = async (req, res) => {
+    try{
+        const makeupId = req.params.id;
+        const makeup = await Makeup.findById(makeupId);
+        if(makeup){
+            await makeup.delete();
+            res.json(success("Makeup Service Deleted Successfully"));
+        } else {
+            res.json(failure("Makeup Service Not Found"));
+        }
+    } catch(err){
+        console.log(err);
+        res.json(failure("Something went wrong"));
+    }
+    res.end();
+}
