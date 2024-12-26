@@ -98,3 +98,25 @@ exports.update_user_profile = async (req, res) => {
     }   
     res.end();
 }
+
+
+module.exports.reset_password = async (req, res) => {
+    try{
+        const user = await User.findOne({email: req.body.email});
+        if(user){
+            const resetCode = randomIntGenerator(100000, 999999);
+            console.log(`Your OTP: ${resetCode}`);
+            const hashedResetCode= await bcrypt.hash(resetCode.toString(), 10);
+            const resetCodeExpiry = moment().add(20, 'minutes');
+            await User.findByIdAndUpdate(user._id, {resetCode: hashedResetCode, resetCodeExpiration: resetCodeExpiry}); 
+            //send email with reset code
+            res.json(success("Reset Code Sent Successfully"));
+        } else {
+            res.json(failure("Email doesnot Exist"));
+        }
+        } catch(err){
+            console.log(err);
+            res.json(failure("Something went wrong"));
+        }
+        res.end();
+}
