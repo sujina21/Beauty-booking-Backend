@@ -80,3 +80,21 @@ exports.get_user_profile = async (req, res) => {
     }
     res.end();
 }
+
+exports.update_user_profile = async (req, res) => {
+    try{
+        await User.updateOne({_id: req.user._id}, {
+            fullname: req.body.fullname,
+            bio: req.body.bio,
+            phone: req.body.phone,
+            address: req.body.address,
+            gender: req.body.gender,
+            website: req.body.website
+        });
+        res.json(success("Profile Updated Successfully"));
+    } catch(err){
+        console.log(err);
+        res.json(failure("Something went wrong"));
+    }   
+    res.end();
+}
