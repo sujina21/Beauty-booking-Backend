@@ -73,3 +73,20 @@ exports.update_nail_service = async (req, res) => {
     }
     res.end();
 }
+
+exports.delete_nail_service_by_id = async (req, res) => {
+    try{
+        const nailId = req.params.id;
+        const nail = await Nail.findById(nailId);
+        if(nail){
+            await nail.delete();
+            res.json(success("Nail Service Deleted Successfully"));
+        } else {
+            res.json(failure("Nail Service Not Found"));
+        }
+    } catch(err){
+        console.log(err);
+        res.json(failure("Something went wrong"));
+    }
+    res.end();
+}
