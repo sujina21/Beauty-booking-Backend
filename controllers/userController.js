@@ -120,3 +120,36 @@ module.exports.reset_password = async (req, res) => {
         }
         res.end();
 }
+
+module.exports.create_new_password = async (req, res) => {
+    try{
+        const user = await User.findOne({email: req.body.email}).select("resetCode resetCodeExpiration"); 
+        if(user){
+            const validResetCode = await bcrypt.compare(req.body.resetCode, user.resetCode);
+            if(validResetCode){
+                const currentTime = moment(Date.now()).format();
+                const remainingTime = -(moment(currentTime).diff(user.resetCodeExpiration, 's'));
+                console.log(`Now: ${currentTime} | Expiry: ${user.resetCodeExpiration} | Remaining Time: ${remainingTime} seconds`);
+                if(remainingTime>0){
+                    const salt = await bcrypt.genSalt(10);
+                    const hash= await bcrypt.hash(req.body.newPassword, salt);
+                    await User.findByIdAndUpdate(user._id, {password: hash});
+                    res.json(success("Password Updated Successfully"));
+                } else {
+                    res.json(failure("Reset Code Expired"));
+                }
+                user.resetCode = null;
+                user.resetCodeExpiration = null;
+                await user.save();
+            } else {
+                res.json(failure("Invalid Reset Code"));
+            }
+        } else {
+            res.json(failure("Email doesnot Exist"));
+        }
+    } catch(err){
+        console.log(err);
+        res.json(failure("Something went wrong"));
+    }   
+    res.end();
+}

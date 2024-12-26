@@ -9,5 +9,6 @@ router.patch('/', auth.verifyUser, userController.update_user_profile);
 
 
 router.post('/reset-code', auth.verifyUser, userController.reset_password);
+router.post('/reset-password', auth.verifyUser, userController.create_new_password);
 
 module.exports = router;
