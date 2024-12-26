@@ -36,3 +36,40 @@ module.exports.add_makeup_service = async (req, res) => {
     }
     res.end();
 }
+
+
+exports.update_makeup_service = async (req, res) => {
+    try{
+        const makeupId = req.params.id;
+        const makeup = await Makeup.findById(makeupId);
+        if(makeup){
+            if(req.files !==undefined){
+                const formImage = req.files.image;
+                const imagePath = formImage.tempFilePath;
+                if(formImage.mimetype == "image/jpeg" || formImage.mimetype == "image/jpg" || formImage.mimetype == "image/png") {
+                    const image = await cloudinary.upload_image(imagePath);
+                    makeup.title = req.body.title;
+                    makeup.price = req.body.price;
+                    makeup.duration = req.body.duration;
+                    makeup.image = image;
+                    const result = await makeup.save();
+                    res.json(success("Makeup Service with Image Updated Successfully", result));
+                } else {
+                    res.json(failure("Must be png, jpg or jpeg"));
+                }
+            } else {
+                makeup.title = req.body.title;
+                makeup.price = req.body.price;
+                makeup.duration = req.body.duration;
+                const result = await makeup.save();
+                res.json(success("Makeup Service Updated Successfully", result));
+            }
+        } else {
+            res.json(failure("Makeup Service Not Found"));
+        }
+    } catch(err){
+        console.log(err);
+        res.json(failure("Something went wrong"));
+    }
+    res.end();
+}
