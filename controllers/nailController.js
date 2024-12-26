@@ -101,3 +101,19 @@ exports.get_all_nail_services = async (req, res) => {
     }
     res.end();
 }   
+
+exports.get_nail_service_by_id = async (req, res) => {
+    try{
+        const nailId = req.params.id;
+        const nail = await Nail.findById(nailId);
+        if(nail){
+            res.json(success("Nail Service Fetched", nail));
+        } else {
+            res.json(failure("Nail Service Not Found"));
+        }
+    } catch(err){
+        console.log(err);
+        res.json(failure("Something went wrong"));
+    }
+    res.end();
+}   
