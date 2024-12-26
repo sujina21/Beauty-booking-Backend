@@ -90,3 +90,14 @@ exports.delete_nail_service_by_id = async (req, res) => {
     }
     res.end();
 }
+
+exports.get_all_nail_services = async (req, res) => {
+    try{
+        const nails = await Nail.find();
+        res.json(success("Nail Services Fetched", nails));
+    } catch(err){
+        console.log(err);
+        res.json(failure("Something went wrong"));
+    }
+    res.end();
+}   
