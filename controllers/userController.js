@@ -2,6 +2,8 @@ const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const {success, failure} =  require('../utils/message');
+const moment = require("moment");
+const randomIntGenerator = require("../utils/generate-random-int");
 
 
 exports.register_new_user = async (req, res) => {
@@ -61,3 +63,20 @@ exports.login_user = async (req, res) => {
     }
     res.end();
 }   
+
+exports.get_user_profile = async (req, res) => {
+    try{
+        const user = await User.findById(req.user._id).select("resetCode");  //already verified user
+        if(user){
+            res.json(success("User Fetched", user));
+        }
+        else{
+            res.json(failure("User Not Found"));
+        }
+    }
+    catch(err){
+        console.log(err);
+        res.json(failure("Something went wrong"));
+    }
+    res.end();
+}
