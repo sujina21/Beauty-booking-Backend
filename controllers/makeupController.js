@@ -4,7 +4,7 @@ const cloudinary = require("../utils/cloudinary");
 
 module.exports.add_makeup_service = async (req, res) => {
     try{
-        const userId = req.user._id;
+        // const userId = req.user._id;
         if(req.files !==undefined){
             const formImage = req.files.image;
             const imagePath = formImage.tempFilePath;
@@ -77,13 +77,9 @@ exports.update_makeup_service = async (req, res) => {
 exports.delete_makeup_service_by_id = async (req, res) => {
     try{
         const makeupId = req.params.id;
-        const makeup = await Makeup.findById(makeupId);
-        if(makeup){
-            await makeup.delete();
-            res.json(success("Makeup Service Deleted Successfully"));
-        } else {
-            res.json(failure("Makeup Service Not Found"));
-        }
+        await Makeup.findByIdAndDelete(makeupId);
+        res.json(success("Makeup Service Deleted Successfully"));
+        
     } catch(err){
         console.log(err);
         res.json(failure("Something went wrong"));

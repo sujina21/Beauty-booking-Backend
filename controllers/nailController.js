@@ -4,7 +4,7 @@ const cloudinary = require("../utils/cloudinary");
 
 module.exports.add_nail_service = async (req, res) => {
     try{
-        const userId = req.user._id;
+        // const userId = req.user._id;
         if(req.files !==undefined){
             const formImage = req.files.image;
             const imagePath = formImage.tempFilePath;
@@ -77,13 +77,8 @@ exports.update_nail_service = async (req, res) => {
 exports.delete_nail_service_by_id = async (req, res) => {
     try{
         const nailId = req.params.id;
-        const nail = await Nail.findById(nailId);
-        if(nail){
-            await nail.delete();
-            res.json(success("Nail Service Deleted Successfully"));
-        } else {
-            res.json(failure("Nail Service Not Found"));
-        }
+        await Nail.findByIdAndDelete(nailId);
+        res.json(success("Nail Service Deleted Successfully"));
     } catch(err){
         console.log(err);
         res.json(failure("Something went wrong"));
