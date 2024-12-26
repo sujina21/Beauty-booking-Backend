@@ -3,7 +3,9 @@ const morgan = require('morgan');
 const fileUpload = require('express-fileupload');
 
 // Routes Imports
-const userRoutes = require('./routes/userRoute');
+const userRoute = require('./routes/userRoute');
+const nailRoute = require('./routes/nailRoute');    
+const makeupRoute = require('./routes/makeupRoute');
 
 const app = express();
 
@@ -18,6 +20,8 @@ app.get('/', (req, res) => {
 
 
 // Routes
-app.use('/users', userRoutes);
+app.use('/users', userRoute);
+app.use('/nail', nailRoute);
+app.use('/makeup', makeupRoute);
 
 module.exports = app;
