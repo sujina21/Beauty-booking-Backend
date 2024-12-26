@@ -90,3 +90,14 @@ exports.delete_makeup_service_by_id = async (req, res) => {
     }
     res.end();
 }
+
+exports.get_all_makeup_services = async (req, res) => {
+    try{
+        const makeups = await Makeup.find();
+        res.json(success("Makeup Services Fetched", makeups));
+    } catch(err){
+        console.log(err);
+        res.json(failure("Something went wrong"));
+    }
+    res.end();
+}   
