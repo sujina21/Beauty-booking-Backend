@@ -1,4 +1,3 @@
-const { hash } = require('bcryptjs');
 const mongoose = require('mongoose');
 
 const nailSchema = new mongoose.Schema({
