@@ -101,3 +101,19 @@ exports.get_all_makeup_services = async (req, res) => {
     }
     res.end();
 }   
+
+exports.get_makeup_service_by_id = async (req, res) => {
+    try{
+        const makeupId = req.params.id;
+        const makeup = await Makeup.findById(makeupId);
+        if(makeup){
+            res.json(success("Makeup Service Fetched", makeup));
+        } else {
+            res.json(failure("Makeup Service Not Found"));
+        }
+    } catch(err){
+        console.log(err);
+        res.json(failure("Something went wrong"));
+    }
+    res.end();
+}   
