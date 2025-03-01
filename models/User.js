@@ -42,6 +42,11 @@ const userSchema = mongoose.Schema({
         enum: ['male', 'female', 'other', 'hidden'],
         default: "hidden"
     },
+    role: {
+        type: String,
+        enum: ['user', 'admin'],
+        default: "user"
+    },
     bio: {
         type: String,
         default: ""

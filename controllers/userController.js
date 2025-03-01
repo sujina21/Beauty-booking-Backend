@@ -15,6 +15,8 @@ exports.register_new_user = async (req, res) => {
         else{
             const fullname = req.body.fullname;
             const email = req.body.email;
+            const phone = req.body.phone;
+            const role = req.body.role;
             const password = req.body.password;
             const salt = await bcrypt.genSalt(10);
             const hash= await bcrypt.hash(password, salt);
@@ -22,6 +24,8 @@ exports.register_new_user = async (req, res) => {
             const newUser = new User({
                 fullname: fullname,
                 email: email,
+                phone: phone,
+                role: role ? role : "user",
                 password: hash,
                 profile: avatarUrl
             });
@@ -47,6 +51,8 @@ exports.login_user = async (req, res) => {
             const validPass = await bcrypt.compare(req.body.password, user.password);
             if(validPass){
                 const accessToken = jwt.sign({_id: user._id}, process.env.TOKEN_KEY);
+                console.log(`login --> `+accessToken);
+                
                 res.json({message:"Login Successful", data:user, success:true, accessToken: accessToken});
             }
             else{
@@ -66,7 +72,7 @@ exports.login_user = async (req, res) => {
 
 exports.get_user_profile = async (req, res) => {
     try{
-        const user = await User.findById(req.user._id).select("resetCode");  //already verified user
+        const user = await User.findById(req.user._id);  //already verified user
         if(user){
             res.json(success("User Fetched", user));
         }

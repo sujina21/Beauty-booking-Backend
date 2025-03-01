@@ -13,11 +13,20 @@ const nailSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    description: {
+    info:{
         type: String,
+        required: true,
+    },
+    description: {
+        type: [String],
+        required: true
     },
     image: {
         type: String,
+    },
+    serviceType: {
+        type: String,
+        default: "Nail"
     },
     createdDate: {  
         type: Date,

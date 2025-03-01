@@ -13,11 +13,20 @@ const makeupSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    description: {
+    info:{
         type: String,
+        required: true,
+    },
+    description: {
+        type: [String],
+        required: true
     },
     image: {
         type: String,
+    },
+    serviceType: {
+        type: String,
+        default: "Makeup"
     },
     createdDate: {  
         type: Date,
