@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const {success, failure} =  require('../utils/message');
 const moment = require("moment");
 const randomIntGenerator = require("../utils/generate-random-int");
-
+const cloudinary = require("../utils/cloudinary");
 
 exports.register_new_user = async (req, res) => {
     try{
@@ -13,14 +13,20 @@ exports.register_new_user = async (req, res) => {
            res.json(failure("User Already Exists"));
         }
         else{
-            const fullname = req.body.fullname;
+            const fullname = req.body.name;
+            let avatarUrl=`https://ui-avatars.com/api/?background=random&name=${fullname}`;
+
+            if(req.files !== undefined){
+                const formImage = req.files.profilePicture;
+                const imagePath = formImage.tempFilePath;
+                avatarUrl = await cloudinary.upload_image(imagePath);
+            }
             const email = req.body.email;
             const phone = req.body.phone;
             const role = req.body.role;
             const password = req.body.password;
             const salt = await bcrypt.genSalt(10);
             const hash= await bcrypt.hash(password, salt);
-            const avatarUrl=`https://ui-avatars.com/api/?background=random&name=${fullname}`;
             const newUser = new User({
                 fullname: fullname,
                 email: email,
@@ -157,5 +163,30 @@ module.exports.create_new_password = async (req, res) => {
         console.log(err);
         res.json(failure("Something went wrong"));
     }   
+    res.end();
+}
+
+module.exports.get_all_users = async (req, res) => {
+    try{
+        const users = await User.find().select("fullname email phone role");
+        res.json(success("Users Fetched", users)); 
+    }
+    catch(err){
+        console.log(err);
+        res.json(failure("Something went wrong"));
+    }
+    res.end();
+}
+
+
+module.exports.update_user_role = async (req, res) => {
+    try{
+        await User.updateOne({_id: req.params.userId}, {role: req.params.status});
+        res.json(success("User Role Updated Successfully"));
+    }
+    catch(err){
+        console.log(err);
+        res.json(failure("Something went wrong"));
+    }
     res.end();
 }
