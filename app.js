@@ -22,6 +22,7 @@ const corsOptions = {
   credentials: true, // Allow credentials (cookies, HTTP authentication, etc.)
   methods: 'GET,POST,PUT, PATCH, DELETE', // Allow specific HTTP methods
   allowedHeaders: 'Content-Type,Authorization', // Allowed headers
+  exposedHeaders: 'Access-Control-Allow-Origin',
 };
 
 // Use CORS with the specified options
