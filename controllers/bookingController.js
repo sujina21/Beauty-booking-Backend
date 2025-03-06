@@ -126,7 +126,7 @@ module.exports.getAllBookingsByUser = async (req, res) => {
   try {
     const userId = req.user._id;
     const bookings = await Booking.find({ userId })
-      .populate("serviceId", "title price"); // Get service details
+      .populate("serviceId", "title price image"); // Get service details
 
     res.json(success("All Booking fetched",bookings));
   } catch (error) {
